@@ -1,0 +1,14 @@
+/* Card.css */
+.card {
+    width: 300px;
+    height: 200px;
+    background-image: url("./images/nails.jpeg");
+    /* Replace with the actual image URL */
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Add any additional styling for your card here */
+    color: white;
+    /* Optionally, set text color to white for better visibility */
+}

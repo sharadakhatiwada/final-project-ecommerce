@@ -1,0 +1,5 @@
+.left-align-tabs {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}

@@ -1,26 +1,46 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+// import Container from "react-bootstrap/Container";
+// import Nav from "react-bootstrap/Nav";
+// import Navbar from "react-bootstrap/Navbar";
+// import NavDropdown from "react-bootstrap/NavDropdown";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faMagnifyingGlass,
   faCartShopping,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { UserContext } from "../App";
+import { categories } from "./admin/product/NewProductForm";
+import { useTranslation } from "react-i18next";
+
+// import { Button } from "bootstrap";
 export default function NavPage() {
+  const { userContext, clearContext, translate } = useContext(UserContext);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const [search, setSearch] = useState("");
+
+  //Sign out
+  const singOut = () => {
+    window.localStorage.removeItem("token");
+    clearContext();
+    navigate("/");
+  };
+
   return (
     <>
       <nav
-        class="navbar navbar-expand-lg navbar-light"
+        class="navbar navbar-expand-lg navbar-dark"
         style={{
           width: "100%",
-          backgroundColor: "#a1caf1",
+          backgroundColor: "#0071dc",
         }}
       >
-        <a class="navbar-brand" href="#">
+        {/* <a class="navbar-brand" href="#">
           Navbar
-        </a>
+        </a> */}
         <button
           class="navbar-toggler"
           type="button"
@@ -36,47 +56,24 @@ export default function NavPage() {
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">
-                Home <span class="sr-only">(current)</span>
+              <a class="nav-link" href="/">
+                Home
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
-                Link
+              <a class="nav-link" href="/about">
+                About
               </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Dropdown
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">
-                  Action
-                </a>
-                <a class="dropdown-item" href="#">
-                  Another action
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">
-                  Something else here
-                </a>
-              </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link disabled" href="#">
-                Disabled
+              <a class="nav-link" href="/about">
+                {t("welcome")}
               </a>
             </li>
           </ul>
           <form
+            action={`/search?q=${search}`}
+            method="GET"
             style={{
               marginLeft: "5%",
               width: "50%",
@@ -84,97 +81,116 @@ export default function NavPage() {
               height: "40%",
             }}
           >
-            <div>
+            <div class="input-group">
               <input
-                class="form-control"
+                class="form-control border-end-0 border rounded-pill"
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <input type="button" />
+
+              <span class="input-group-append">
+                <button
+                  type="button"
+                  style={{
+                    borderRadius: "50%",
+                    border: "none",
+                    backgroundColor: "rgb(244, 196, 48)",
+                    right: "2.25rem",
+                    top: "0.30rem",
+                    position: "relative",
+                    zIndex: "999",
+                  }}
+                >
+                  <a href={`/search?q=${search}`}>
+                    <FontAwesomeIcon
+                      style={{ color: "black" }}
+                      icon={faMagnifyingGlass}
+                    />
+                  </a>
+                </button>
+              </span>
             </div>
           </form>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Sign out
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Cart
-                  <FontAwesomeIcon icon={faCartShopping} />
-                </a>
-              </li>
+              {userContext.email && (
+                <>
+                  <li class="nav-item">
+                    <Link to="/profile" class="nav-link">
+                      {t("welcome")} {userContext.email}
+                    </Link>
+                  </li>
+                  <li class="nav-item" onClick={() => singOut()}>
+                    <a class="nav-link" href="#">
+                      Sign out
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <Link class="nav-link" to="/products/carts">
+                      Cart
+                      <FontAwesomeIcon icon={faCartShopping} />
+                      {userContext.cartCount && (
+                        <button
+                          type="button"
+                          style={{
+                            borderRadius: "50%",
+                            border: "none",
+                            backgroundColor: "rgb(244, 196, 48)",
+                          }}
+                        >
+                          {userContext.cartCount}
+                        </button>
+                      )}
+                    </Link>
+                  </li>
+                </>
+              )}
+              {!userContext.email && (
+                <>
+                  <li class="nav-item" onClick={() => navigate("/login")}>
+                    <a class="nav-link" href="#">
+                      Sign In
+                    </a>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>
       </nav>
       {/* nav for category */}
       <nav
-        class="navbar navbar-expand-lg navbar-light "
+        class="navbar navbar-expand-lg navbar-dark"
         style={{
           width: "100%",
-          backgroundColor: "#a1caf1",
+          backgroundColor: "#0071dc",
           height: "40px",
           marginTop: "2px",
         }}
       >
-        <a class="navbar-brand" href="#">
-          Navbar
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">
-                Home <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Features
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Pricing
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#">
-                Disabled
-              </a>
-            </li>
+            {categories.map((c) => {
+              return (
+                <>
+                  <li class="nav-item">
+                    <a
+                      key={c.name}
+                      class="nav-link"
+                      href={`/search?category=${c.value}`}
+                    >
+                      {c.name}
+                    </a>
+                  </li>
+                </>
+              );
+            })}
           </ul>
         </div>
       </nav>
-      <div>
-        <div class="card" style={{ width: "18rem" }}>
-          <img class="card-img-top" src="..." alt="Card image cap" />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
-            <a href="#" class="btn btn-primary">
-              Go somewhere
-            </a>
-          </div>
-        </div>
-      </div>
+      <div></div>
     </>
   );
 }
