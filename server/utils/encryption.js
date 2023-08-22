@@ -11,7 +11,7 @@ const jwtSign = (user) => {
   return jwt.sign(
     {
       id: user.id,
-      name: user.username,
+      email: user.email,
       role: user.role,
     },
     "secret",

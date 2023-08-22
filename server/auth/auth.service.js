@@ -16,8 +16,8 @@ const login = async (username, password) => {
 
   return {
     id: currentUser.id,
-    username: currentUser.username,
-    playType: currentUser.playType,
+    email: currentUser.email,
+    role: currentUser.role,
     accessToken,
   };
 };

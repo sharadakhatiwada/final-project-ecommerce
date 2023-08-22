@@ -18,34 +18,12 @@ import AdminPage from "./components/admin/AdminPage";
 import { useLocation, useRoutes, useNavigate } from "react-router-dom";
 import { useEffect, useState, createContext } from "react";
 
-const { OpenAIApi } = require("openai");
-
 export const UserContext = createContext({});
 function App() {
   const apiPath = process.env.REACT_APP_SERVER_URL;
 
   // for Langugage change
   const lang = window.localStorage.getItem("lang");
-  const translate = (text, options) => {
-    // const openaiConfig = {
-    //   apiKey: "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",
-    // };
-    // const openaiApi = new OpenAIApi(openaiConfig);
-    // openaiApi
-    //   .createCompletion(
-    //     {
-    //       engine: "davinci-002",
-    //       prompt: text,
-    //       lang: lang,
-    //       temperature: 0.5,
-    //       max_tokens: 4000,
-    //     },
-    //     options
-    //   )
-    //   .then((res) => {
-    //     return res.choices[0].text;
-    //   });
-  };
 
   const [state, setState] = useState({
     lang,
@@ -137,7 +115,7 @@ function App() {
     <div className="App">
       <I18nextProvider i18n={i18n}>
         <UserContext.Provider
-          value={{ userContext: state, clearContext, setContext, translate }}
+          value={{ userContext: state, clearContext, setContext }}
         >
           {routes}
         </UserContext.Provider>

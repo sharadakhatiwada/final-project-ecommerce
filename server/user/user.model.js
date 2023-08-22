@@ -1,14 +1,4 @@
-// class User {
-//   constructor(id, username, email, password, playType) {
-//     this.id = id;
-//     this.username = username;
-//     this.email = email;
-//     this.password = password;
-//     this.playType = playType;
-//   }
-// }
 const mongoose = require("mongoose");
-
 const addressSchema = mongoose.Schema({
   street: { type: String },
   city: { type: String },
@@ -18,12 +8,17 @@ const addressSchema = mongoose.Schema({
 });
 
 const userSchema = mongoose.Schema({
-  username: { type: String },
-  email: { type: String },
-  password: { type: String },
-  address: { type: addressSchema },
-  phoneNumber: { type: String },
-  role: { type: String, enum: ["admin", "user"] },
+  firstname: { type: String, required: true },
+  lastname: { type: String, required: true },
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+  address: [addressSchema],
+  phoneNumber: { type: String, required: true },
+  role: {
+    type: String,
+    enum: ["admin", "user", "super-admin"],
+    default: "user",
+  },
 });
 
 const UserModel = mongoose.model("user", userSchema);

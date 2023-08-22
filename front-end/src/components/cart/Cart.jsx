@@ -22,9 +22,7 @@ export default function Cart() {
   const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
-  const stripePromise = loadStripe(
-    "pk_test_51NamLiL35KzK7AfsAG8NRQIrotRTlbWrlzyLZbLvUufeyjbc5m5HfkOuu4ykfOtUY35Jx7tZtZGL1gsJOzah1ZmA00IEtoGSLa"
-  );
+  const stripePromise = loadStripe("stripekey");
 
   useEffect(() => {
     userContext.email && getProductsFromCart();

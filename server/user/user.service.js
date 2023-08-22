@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("./user.model");
+const { hash } = require("../utils/encryption");
+const authService = require("../auth/auth.service");
 
 const updateUser = async (userId, updatedUser) => {
   const id = new mongoose.Types.ObjectId(userId);
@@ -18,12 +20,14 @@ const getUser = async (userId) => {
   }
 };
 const createUser = async (user) => {
-  const { email } = user;
-  const findUser = await userModel.findOne(email);
+  const { email, password } = user;
+  const findUser = await User.findOne({ email });
   if (findUser) {
     throw new Error("User Already Exist!");
   }
-  let newUSer = await userModel.create(user);
+  user.password = hash(password);
+  await User.create(user);
+  return authService.login(email, password);
 };
 
 module.exports = { updateUser, getUser, createUser };

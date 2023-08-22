@@ -1,4 +1,5 @@
 const authService = require("./auth.service");
+const { createUser } = require("../user/user.service");
 
 const login = async (req, res, next) => {
   try {
@@ -10,6 +11,7 @@ const login = async (req, res, next) => {
 };
 const signup = async (req, res, next) => {
   try {
+    return res.json(await createUser(req.body));
   } catch (error) {
     next(error);
   }
